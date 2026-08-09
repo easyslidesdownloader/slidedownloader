@@ -1,7 +1,13 @@
+import puppeteerCore from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer";
 
+const isProd = process.env.VERCEL_ENV === "production" || process.env.VERCEL === "1";
+
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
-  let browser = null;
+  let browser: any = null;
   try {
     const { url, quality } = await req.json();
 
@@ -9,38 +15,42 @@ export async function POST(req: Request) {
       return Response.json({ success: false, error: "Please enter a valid SlideShare URL" }, { status: 400 });
     }
 
-    browser = await puppeteer.launch({ headless: true });
+    if (isProd) {
+      browser = await puppeteerCore.launch({
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      });
+    } else {
+      browser = await puppeteer.launch({ headless: true });
+    }
+
     const page = await browser.newPage();
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
     );
 
     await page.setRequestInterception(true);
-    page.on("request", (r) => {
+    page.on("request", (r: any) => {
       const t = r.resourceType();
       if (["stylesheet", "font", "media"].includes(t)) r.abort();
       else r.continue();
     });
 
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
-    await new Promise((r) => setTimeout(r, 1500)); // let bot-challenge JS resolve
+    await new Promise((r) => setTimeout(r, 1500));
 
-    // The slide list is virtualized (only renders slides near current scroll
-    // position). Auto-scroll through the whole deck so every slide div gets
-    // created, then we can count the true total.
     await page.evaluate(async () => {
       const scrollStep = 1500;
       let lastHeight = 0;
       let stableCount = 0;
-
       for (let i = 0; i < 400; i++) {
         window.scrollBy(0, scrollStep);
         await new Promise((r) => setTimeout(r, 150));
-
         const height = document.body.scrollHeight;
         if (height === lastHeight) {
           stableCount++;
-          if (stableCount >= 4) break; // height stopped growing, we're at the bottom
+          if (stableCount >= 4) break;
         } else {
           stableCount = 0;
         }
@@ -66,7 +76,6 @@ export async function POST(req: Request) {
     browser = null;
 
     const cleanTitle = title.replace(/\s*\|\s*(PPTX?|SlideShare)$/i, "").trim() || "presentation";
-
     const match = html.match(/https:\/\/image\.slidesharecdn\.com\/([^/"']+)\/85\/([^/"']+?)-(\d+)-320\.jpg/i);
 
     if (!match || totalSlides === 0) {
@@ -86,25 +95,12 @@ export async function POST(req: Request) {
     }
 
     const slides = [];
-    for (let n = 1; n <= totalSlides; n++) {
-      slides.push(buildUrl(n, quality));
-    }
+    for (let n = 1; n <= totalSlides; n++) slides.push(buildUrl(n, quality));
 
     const filename =
-      cleanTitle
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .trim()
-        .replace(/\s+/g, "-")
-        .slice(0, 100) || "presentation";
+      cleanTitle.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 100) || "presentation";
 
-    return Response.json({
-      success: true,
-      title: cleanTitle,
-      filename,
-      count: slides.length,
-      slides,
-    });
+    return Response.json({ success: true, title: cleanTitle, filename, count: slides.length, slides });
   } catch (err: any) {
     if (browser) await browser.close().catch(() => {});
     return Response.json({ success: false, error: err.message }, { status: 500 });

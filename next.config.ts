@@ -1,7 +1,3 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+const nextConfig = { outputFileTracingIncludes: { "/api/fetch-slides": ["./node_modules/@sparticuz/chromium/bin/**/*"], }, }; export default nextConfig;

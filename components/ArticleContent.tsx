@@ -1,29 +1,40 @@
+import Image from "next/image";
+
 export default function ArticleContent() {
   return (
     <section className="py-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <div className="space-y-14">
-  <div>
-    <h2 className="font-display text-2xl font-semibold tracking-tight mb-4">
-      Free Online Tool to Download SlideShare Presentations Without Login
-    </h2>
-    <p className="text-[var(--color-ink-muted)] leading-relaxed mb-3">
-      We've all faced this situation — you find a valuable SlideShare presentation, but
-      there's no download option available. Whether it's a lecture, business deck, or
-      research material, not being able to save it can be frustrating.
-    </p>
-    <p className="text-[var(--color-ink-muted)] leading-relaxed">
-      EasySlidesDownloader solves that problem instantly. You can download SlideShare
-      presentations as PDF, PPTX, or images without logging in, without installing any
-      software, and without wasting time on complicated steps. Just paste the link above,
-      and your file will be ready shortly.
-    </p>
-  </div>
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight mb-4">
+              Free Online Tool to Download SlideShare Presentations Without Login
+            </h2>
+            <p className="text-[var(--color-ink-muted)] leading-relaxed mb-3">
+              We've all faced this situation — you find a valuable SlideShare presentation, but
+              there's no download option available. Whether it's a lecture, business deck, or
+              research material, not being able to save it can be frustrating.
+            </p>
+            <p className="text-[var(--color-ink-muted)] leading-relaxed">
+              EasySlidesDownloader solves that problem instantly. You can download SlideShare
+              presentations as PDF, PPTX, or images without logging in, without installing any
+              software, and without wasting time on complicated steps. Just paste the link above,
+              and your file will be ready shortly.
+            </p>
+            <div className="mt-6 rounded-2xl overflow-hidden border border-[var(--color-border)]">
+              <Image
+                src="/images/slideshare-downloader.png"
+                alt="SlideShare Downloader tool preview"
+                width={1200}
+                height={675}
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
 
-  <div>
-    <h2 className="font-display text-2xl font-semibold tracking-tight mb-4">
-      Why the SlideShare Download Option Doesn't Work
-    </h2>
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight mb-4">
+              Why the SlideShare Download Option Doesn't Work
+            </h2>
             <p className="text-[var(--color-ink-muted)] leading-relaxed mb-3">
               Many users ask why they can't download presentations directly from SlideShare, now
               part of LinkedIn. There are a few common reasons: the uploader has disabled
