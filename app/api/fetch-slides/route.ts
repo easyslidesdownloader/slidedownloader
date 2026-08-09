@@ -1,8 +1,6 @@
+import puppeteerCore from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
-import puppeteerExtra from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-
-puppeteerExtra.use(StealthPlugin());
+import puppeteer from "puppeteer";
 
 const isProd = process.env.VERCEL_ENV === "production" || process.env.VERCEL === "1";
 
@@ -18,13 +16,13 @@ export async function POST(req: Request) {
     }
 
     if (isProd) {
-      browser = await puppeteerExtra.launch({
+      browser = await puppeteerCore.launch({
         args: chromium.args,
         executablePath: await chromium.executablePath(),
         headless: true,
       });
     } else {
-      browser = await puppeteerExtra.launch({ headless: true });
+      browser = await puppeteer.launch({ headless: true });
     }
 
     const page = await browser.newPage();
