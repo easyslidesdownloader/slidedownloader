@@ -5,7 +5,6 @@ import { exportToPDF, exportToPPTX, exportToZIP, prefetchSlides } from "@/lib/co
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ArticleContent from "@/components/ArticleContent";
-import CTASection from "@/components/CTASection";
 import {
   TrustBadges,
   FeaturesSection,
@@ -69,6 +68,7 @@ export default function Home() {
         prefetchSlides(data.slides);
       } else {
         setError(data.error || "Something went wrong. Please try again.");
+        if (data.debug) console.log("DEBUG INFO:", data.debug);
       }
     } catch {
       setError("Couldn't reach the server. Check your connection and try again.");
@@ -240,7 +240,6 @@ export default function Home() {
       <FormatCompareSection />
       <ArticleContent />
       <FAQSection />
-      <CTASection />
       <Footer />
     </>
   );

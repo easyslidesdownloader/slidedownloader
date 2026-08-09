@@ -80,7 +80,17 @@ export async function POST(req: Request) {
 
     if (!match || totalSlides === 0) {
       return Response.json(
-        { success: false, error: "No slides found. The presentation may be private, deleted, or the URL is wrong." },
+        {
+          success: false,
+          error: "No slides found. The presentation may be private, deleted, or the URL is wrong.",
+          debug: {
+            pageTitle: cleanTitle,
+            totalSlides,
+            htmlLength: html.length,
+            htmlPreview: html.slice(0, 500),
+            env: isProd ? "vercel-prod" : "local",
+          },
+        },
         { status: 404 }
       );
     }
