@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {},
   images: {
     remotePatterns: [
       {
@@ -9,9 +10,6 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  outputFileTracingIncludes: {
-    "/api/fetch-slides": ["./node_modules/@sparticuz/chromium/bin/**/*"],
   },
   webpack: (config, { webpack }) => {
     config.plugins.push(
