@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Disclaimer",
+  description: "Disclaimer covering third-party content, intended use, and liability for EasySlidesDownloader.",
+};
 
 const SECTIONS = [
   {

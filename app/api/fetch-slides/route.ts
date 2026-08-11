@@ -1,8 +1,5 @@
 import puppeteerCore from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer";
-
-const isProd = process.env.VERCEL_ENV === "production" || process.env.VERCEL === "1";
 
 export const maxDuration = 60;
 
@@ -15,15 +12,11 @@ export async function POST(req: Request) {
       return Response.json({ success: false, error: "Please enter a valid SlideShare URL" }, { status: 400 });
     }
 
-    if (isProd) {
-      browser = await puppeteerCore.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-      });
-    } else {
-      browser = await puppeteer.launch({ headless: true });
-    }
+    browser = await puppeteerCore.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    });
 
     const page = await browser.newPage();
     await page.setUserAgent(
@@ -88,7 +81,6 @@ export async function POST(req: Request) {
             totalSlides,
             htmlLength: html.length,
             htmlPreview: html.slice(0, 500),
-            env: isProd ? "vercel-prod" : "local",
           },
         },
         { status: 404 }

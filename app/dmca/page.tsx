@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "DMCA Policy",
+  description: "How to submit a DMCA takedown notice for content accessed through EasySlidesDownloader.",
+};
 
 const SECTIONS = [
   {

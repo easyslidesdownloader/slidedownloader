@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
+
+export const metadata: Metadata = {
+  title: "Help Center",
+  description:
+    "Guides, FAQs, and troubleshooting for downloading SlideShare presentations with EasySlidesDownloader.",
+};
 
 const STEPS = [
   {

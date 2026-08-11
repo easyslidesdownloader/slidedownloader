@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { posts } from "@/lib/posts";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Guides, tips, and answers for downloading and using SlideShare presentations.",
+};
 
 export default function BlogPage() {
   return (

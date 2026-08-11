@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn about EasySlidesDownloader — a free, private, and reliable tool for downloading SlideShare presentations as PDF, PPTX, or images.",
+};
 
 const DIFFERENTIATORS = [
   {

@@ -247,8 +247,19 @@ export function FormatCompareSection() {
 }
 
 export function FAQSection() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <section className="max-w-3xl mx-auto px-4 sm:px-6 py-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="text-center mb-10">
         <h2 className="font-display text-3xl font-semibold tracking-tight mb-3">
           Frequently Asked Questions
