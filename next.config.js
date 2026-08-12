@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   turbopack: {},
   images: {
     remotePatterns: [
@@ -13,7 +12,7 @@ const nextConfig: NextConfig = {
   },
   webpack: (config, { webpack }) => {
     config.plugins.push(
-      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource: any) => {
+      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
         resource.request = resource.request.replace(/^node:/, "");
       })
     );
@@ -32,4 +31,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
