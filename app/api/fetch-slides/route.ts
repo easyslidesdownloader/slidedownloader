@@ -1,259 +1,157 @@
-import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer-core";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-function isValidSlideShareUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-
-    return (
-      url.protocol === "https:" &&
-      (url.hostname === "slideshare.net" ||
-        url.hostname === "www.slideshare.net")
-    );
-  } catch {
-    return false;
-  }
-}
-
-function makeFilename(title: string): string {
-  return (
-    title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .trim()
-      .replace(/\s+/g, "-")
-      .slice(0, 100) || "presentation"
-  );
-}
-
-function changeQuality(
-  url: string,
-  quality: string
-): string {
-  if (quality === "sd") {
-    return url;
-  }
-
-  try {
-    const parsed = new URL(url);
-
-    if (quality === "hd") {
-      parsed.pathname = parsed.pathname.replace(
-        /-(\d+)\.jpg$/i,
-        "-638.jpg"
-      );
-    }
-
-    if (quality === "fullhd") {
-      parsed.pathname = parsed.pathname.replace(
-        /-(\d+)\.jpg$/i,
-        "-2048.jpg"
-      );
-    }
-
-    return parsed.toString();
-  } catch {
-    return url;
-  }
-}
-
 export async function POST(req: Request) {
-  let browser: Awaited<
-    ReturnType<typeof puppeteer.launch>
-  > | null = null;
-
   try {
-    const body = await req.json();
+    const { url, quality = "sd" } = await req.json();
 
-    const url = body?.url;
-    const quality = body?.quality || "sd";
-
-    console.log(
-      "[fetch-slides] URL:",
-      url
-    );
-
-    console.log(
-      "[fetch-slides] Quality:",
-      quality
-    );
-
-    if (!url || typeof url !== "string") {
+    if (!url || !url.includes("slideshare.net")) {
       return Response.json(
         {
           success: false,
-          error:
-            "Please enter a SlideShare URL.",
+          error: "Please enter a valid SlideShare URL",
         },
         { status: 400 }
       );
     }
 
-    if (!isValidSlideShareUrl(url)) {
-      return Response.json(
-        {
-          success: false,
-          error:
-            "Please enter a valid SlideShare URL.",
-        },
-        { status: 400 }
-      );
-    }
+    console.log("[fetch-slides] URL:", url);
+    console.log("[fetch-slides] Quality:", quality);
 
-    /*
-     * Get Chromium executable for Vercel.
-     */
-    const executablePath =
-      await chromium.executablePath();
+    const response = await axios.get(url, {
+      timeout: 30000,
 
-    console.log(
-      "[fetch-slides] Chromium:",
-      executablePath
-    );
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
 
-    /*
-     * Launch headless Chromium.
-     */
-    browser = await puppeteer.launch({
-      args: chromium.args,
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 
-      defaultViewport: {
-        width: 1366,
-        height: 768,
+        "Accept-Language":
+          "en-US,en;q=0.9",
+
+        Referer:
+          "https://www.slideshare.net/",
+
+        "Upgrade-Insecure-Requests": "1",
       },
 
-      executablePath,
-
-      headless: true,
-    });
-
-    console.log(
-      "[fetch-slides] Browser launched"
-    );
-
-    const page = await browser.newPage();
-
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    );
-
-    await page.setExtraHTTPHeaders({
-      "Accept-Language":
-        "en-US,en;q=0.9",
-    });
-
-    /*
-     * Go to SlideShare.
-     */
-    const response = await page.goto(url, {
-      waitUntil: "domcontentloaded",
-      timeout: 30000,
+      validateStatus: () => true,
     });
 
     console.log(
       "[fetch-slides] HTTP status:",
-      response?.status()
+      response.status
     );
 
-    /*
-     * Give SlideShare JavaScript time to
-     * populate the presentation.
-     */
-    await new Promise((resolve) =>
-      setTimeout(resolve, 4000)
-    );
-
-    const title = await page.title();
+    const html = response.data;
 
     console.log(
-      "[fetch-slides] Title:",
-      title
+      "[fetch-slides] HTML length:",
+      html?.length || 0
     );
 
+    if (response.status !== 200) {
+      return Response.json(
+        {
+          success: false,
+          error: `SlideShare returned HTTP ${response.status}`,
+          debug: {
+            status: response.status,
+            htmlLength: html?.length || 0,
+          },
+        },
+        { status: 502 }
+      );
+    }
+
+    const $ = cheerio.load(html);
+
     /*
-     * Extract presentation images.
+     * Get presentation title.
      */
-    const imageUrls = await page.evaluate(() => {
-      const results: string[] = [];
+    const rawTitle =
+      $("title").first().text();
 
-      const images =
-        document.querySelectorAll("img");
+    const cleanTitle =
+      rawTitle
+        .replace(
+          /\s*\|\s*(PPTX?|SlideShare)$/i,
+          ""
+        )
+        .trim() || "presentation";
 
-      for (const image of images) {
+    /*
+     * First try the old SlideShare structure.
+     *
+     * This is the structure that worked
+     * in your old website.
+     */
+    const imageUrls: string[] = [];
+
+    $(
+      "#new-player .slide-item"
+    ).each((_, element) => {
+      const img =
+        $(element).find("img");
+
+      const src =
+        img.attr("src") ||
+        img.attr("data-src") ||
+        img.attr("data-lazy-src");
+
+      if (src) {
+        imageUrls.push(src);
+      }
+    });
+
+    /*
+     * If old selector didn't work,
+     * search for SlideShare CDN images.
+     */
+    if (imageUrls.length === 0) {
+      $("img").each((_, element) => {
         const candidates = [
-          image.getAttribute("src"),
-          image.getAttribute("data-src"),
-          image.getAttribute(
-            "data-lazy-src"
-          ),
-          image.getAttribute(
-            "data-original"
-          ),
+          $(element).attr("src"),
+          $(element).attr("data-src"),
+          $(element).attr("data-lazy-src"),
+          $(element).attr("data-original"),
         ];
 
-        for (const candidate of candidates) {
-          if (!candidate) continue;
-
-          try {
-            const parsed =
-              new URL(candidate);
-
-            /*
-             * Only SlideShare image CDN.
-             */
-            if (
-              parsed.hostname !==
-              "image.slidesharecdn.com"
-            ) {
-              continue;
-            }
-
-            /*
-             * Only actual slide images.
-             */
-            if (
-              !/-\d+-(320|638|2048)\.jpg$/i.test(
-                parsed.pathname
-              )
-            ) {
-              continue;
-            }
-
-            results.push(
-              parsed.toString()
-            );
-
+        for (const src of candidates) {
+          if (
+            src &&
+            src.includes(
+              "slidesharecdn.com"
+            )
+          ) {
+            imageUrls.push(src);
             break;
-          } catch {
-            continue;
           }
         }
-      }
+      });
+    }
 
-      return [
-        ...new Set(results),
-      ];
-    });
+    /*
+     * Remove duplicates.
+     */
+    const uniqueImages = [
+      ...new Set(imageUrls),
+    ];
 
     console.log(
       "[fetch-slides] Images found:",
-      imageUrls.length
+      uniqueImages.length
     );
 
-    /*
-     * If no images were found, inspect
-     * the HTML for debugging.
-     */
-    if (imageUrls.length === 0) {
-      const html =
-        await page.content();
-
+    if (uniqueImages.length === 0) {
       console.log(
-        "[fetch-slides] HTML length:",
-        html.length
+        "[fetch-slides] Title:",
+        rawTitle
       );
 
       console.log(
@@ -269,9 +167,10 @@ export async function POST(req: Request) {
             "No slides found. SlideShare may have changed its page structure, or the presentation may be private/deleted.",
 
           debug: {
-            title,
-            htmlLength:
-              html.length,
+            pageTitle: rawTitle,
+            htmlLength: html.length,
+            htmlPreview:
+              html.slice(0, 500),
           },
         },
         { status: 404 }
@@ -279,58 +178,66 @@ export async function POST(req: Request) {
     }
 
     /*
-     * Sort slides by slide number.
-     *
-     * Example:
-     * 1, 2, 3, 10
-     */
-    imageUrls.sort((a, b) => {
-      const getNumber = (
-        value: string
-      ) => {
-        const match =
-          value.match(
-            /-(\d+)-(?:320|638|2048)\.jpg$/i
-          );
-
-        return match
-          ? Number(match[1])
-          : 0;
-      };
-
-      return (
-        getNumber(a) -
-        getNumber(b)
-      );
-    });
-
-    /*
-     * Convert to requested quality.
+     * Convert image quality.
      */
     const slides =
-      imageUrls.map((image) =>
-        changeQuality(
-          image,
-          quality
-        )
-      );
+      uniqueImages.map((src) => {
+        try {
+          const parsed =
+            new URL(src);
 
-    const cleanTitle =
-      title
+          /*
+           * SlideShare normally uses:
+           *
+           * -320.jpg
+           * -638.jpg
+           * -2048.jpg
+           */
+
+          if (
+            quality === "fullhd"
+          ) {
+            parsed.pathname =
+              parsed.pathname.replace(
+                /-(320|638|2048)\.jpg$/i,
+                "-2048.jpg"
+              );
+          } else if (
+            quality === "hd"
+          ) {
+            parsed.pathname =
+              parsed.pathname.replace(
+                /-(320|638|2048)\.jpg$/i,
+                "-638.jpg"
+              );
+          } else {
+            parsed.pathname =
+              parsed.pathname.replace(
+                /-(320|638|2048)\.jpg$/i,
+                "-320.jpg"
+              );
+          }
+
+          return parsed.toString();
+        } catch {
+          return src;
+        }
+      });
+
+    /*
+     * Filename.
+     */
+    const filename =
+      cleanTitle
+        .toLowerCase()
         .replace(
-          /\s*\|\s*(PPTX?|SlideShare)$/i,
+          /[^a-z0-9\s-]/g,
           ""
         )
-        .trim() ||
+        .trim()
+        .replace(/\s+/g, "-")
+        .slice(0, 100) ||
       "presentation";
-
-    const filename =
-      makeFilename(cleanTitle);
-
-    console.log(
-      "[fetch-slides] Final slide count:",
-      slides.length
-    );
 
     return Response.json({
       success: true,
@@ -356,17 +263,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    if (browser) {
-      try {
-        await browser.close();
-
-        console.log(
-          "[fetch-slides] Browser closed"
-        );
-      } catch {
-        // Ignore close errors.
-      }
-    }
   }
 }
