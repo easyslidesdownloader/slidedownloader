@@ -57,7 +57,7 @@ export default function Home() {
     }, 2500);
 
     try {
-      const res = await fetch("/api/fetch-slides-browser", {
+      const res = await fetch("/api/fetch-slides", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
