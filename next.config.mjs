@@ -4,14 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname:
-          "image.slidesharecdn.com",
+        hostname: "image.slidesharecdn.com",
         pathname: "/**",
       },
       {
         protocol: "https",
-        hostname:
-          "cdn.slidesharecdn.com",
+        hostname: "cdn.slidesharecdn.com",
         pathname: "/**",
       },
     ],
@@ -21,6 +19,12 @@ const nextConfig = {
     "puppeteer-core",
     "@sparticuz/chromium",
   ],
+
+  outputFileTracingIncludes: {
+    "/api/fetch-slides": [
+      "./node_modules/@sparticuz/chromium/bin/**/*",
+    ],
+  },
 };
 
 export default nextConfig;
