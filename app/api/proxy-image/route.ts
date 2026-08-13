@@ -57,9 +57,10 @@ export async function GET(
       );
 
     const contentType =
-      response.headers[
-        "content-type"
-      ] || "image/jpeg";
+  String(
+    response.headers["content-type"] ||
+      "image/jpeg"
+  );
 
     return new Response(
       response.data,
