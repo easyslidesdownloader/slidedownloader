@@ -58,21 +58,56 @@ export default function Home() {
 
     try {
       const res = await fetch("/api/fetch-slides", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, quality }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setResult(data);
-        prefetchSlides(data.slides);
-      } else {
-        setError(data.error || "Something went wrong. Please try again.");
-        if (data.debug) console.log("DEBUG INFO:", data.debug);
-      }
-    } catch {
-      setError("Couldn't reach the server. Check your connection and try again.");
-    } finally {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    url,
+    quality,
+  }),
+});
+
+const text = await res.text();
+
+let data: any;
+
+try {
+  data = JSON.parse(text);
+} catch {
+  throw new Error(
+    `Server returned HTTP ${res.status}: ${text.slice(0, 300)}`
+  );
+}
+
+console.log(
+  "[fetch-slides] HTTP status:",
+  res.status
+);
+
+console.log(
+  "[fetch-slides] Response:",
+  data
+);
+
+if (!res.ok || !data.success) {
+  throw new Error(
+    data.error ||
+      `Server returned HTTP ${res.status}`
+  );
+}
+
+setResult(data);
+prefetchSlides(data.slides);
+    } catch (err) {
+  console.error("[fetch-slides] Frontend error:", err);
+
+  setError(
+    err instanceof Error
+      ? err.message
+      : "Couldn't reach the server. Please try again."
+  );
+} finally {
       clearInterval(msgTimer);
       setLoadingMsg(LOADING_MESSAGES[0]);
       setLoading(false);
@@ -221,13 +256,13 @@ export default function Home() {
                 {result.slides.map((s, i) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    key={i}
-                    src={s}
-                    alt={`Slide ${i + 1}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="rounded-lg border border-[var(--color-border)] w-full aspect-video object-cover"
-                  />
+  key={i}
+  src={`/api/proxy-image?url=${encodeURIComponent(s)}`}
+  alt={`Slide ${i + 1}`}
+  loading="lazy"
+  decoding="async"
+  className="rounded-lg border border-[var(--color-border)] w-full aspect-video object-cover"
+/>
                 ))}
               </div>
             </div>
