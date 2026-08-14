@@ -1,89 +1,70 @@
-import axios from "axios";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-export async function GET(
-  req: Request
-) {
-  const { searchParams } =
-    new URL(req.url);
-
-  const imageUrl =
-    searchParams.get("url");
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const imageUrl = searchParams.get("url");
 
   if (!imageUrl) {
-    return new Response(
-      "Image URL is required",
+    return NextResponse.json(
+      { error: "Image URL is required" },
       { status: 400 }
     );
   }
 
   try {
-    const parsed =
-      new URL(imageUrl);
+    const url = new URL(imageUrl);
 
-    if (
-      parsed.protocol !== "https:" ||
-      ![
-        "image.slidesharecdn.com",
-        "cdn.slidesharecdn.com",
-      ].includes(
-        parsed.hostname
-      )
-    ) {
-      return new Response(
-        "Invalid image URL",
+    // Only allow HTTPS image URLs
+    if (url.protocol !== "https:") {
+      return NextResponse.json(
+        { error: "Invalid image URL" },
         { status: 400 }
       );
     }
 
-    const response =
-      await axios.get(
-        parsed.toString(),
+    const response = await fetch(url.toString(), {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151.0.0.0 Safari/537.36",
+        Accept: "image/avif,image/webp,image/apng,image/jpeg,image/png,*/*",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return NextResponse.json(
         {
-          responseType:
-            "arraybuffer",
-
-          timeout: 30000,
-
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-
-            Referer:
-              "https://www.slideshare.net/",
-          },
-        }
+          error: `Failed to fetch image. HTTP ${response.status}`,
+        },
+        { status: response.status }
       );
+    }
 
     const contentType =
-  String(
-    response.headers["content-type"] ||
-      "image/jpeg"
-  );
+      response.headers.get("content-type") || "image/jpeg";
 
-    return new Response(
-      response.data,
-      {
-        status: 200,
+    const imageBuffer = await response.arrayBuffer();
 
-        headers: {
-          "Content-Type":
-            contentType,
-
-          "Cache-Control":
-            "public, max-age=31536000, immutable",
-        },
-      }
-    );
+    return new NextResponse(imageBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": contentType,
+        "Cache-Control": "public, max-age=3600",
+      },
+    });
   } catch (error) {
-    console.error(
-      "[proxy-image] ERROR:",
-      error
-    );
+    console.error("[proxy-image] ERROR:", error);
 
-    return new Response(
-      "Failed to fetch image",
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch image",
+      },
       { status: 500 }
     );
   }
