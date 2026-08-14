@@ -58,18 +58,6 @@ export async function POST(req: NextRequest) {
 
     const data: SlideshareApiResponse = await res.json();
 
-    console.log(
-  "[fetch-slides] Available qualities:",
-  JSON.stringify(
-    data.all_slides?.map((set) => ({
-      quality: set.quality,
-      count: set.images?.length,
-      firstImage: set.images?.[0],
-    })),
-    null,
-    2
-  )
-);
 
     if (!data.all_slides || data.all_slides.length === 0) {
       return NextResponse.json(
