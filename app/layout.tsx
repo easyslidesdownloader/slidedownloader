@@ -21,6 +21,9 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.easyslidesdownloader.com"),
+  alternates: {
+  canonical: "https://www.easyslidesdownloader.com",
+  },
   title: {
     default: "SlideShare Downloader — Download PPT, PDF & Slides Instantly",
     template: "%s | EasySlidesDownloader",
