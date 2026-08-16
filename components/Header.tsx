@@ -32,18 +32,15 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 shrink-0">
-          <svg width="30" height="30" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <svg width="26" height="26" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
             <rect x="8" y="20" width="40" height="28" rx="6" fill="#5B4FE9" fillOpacity="0.18" />
             <rect x="14" y="14" width="40" height="28" rx="6" fill="#5B4FE9" fillOpacity="0.45" />
             <rect x="20" y="8" width="40" height="28" rx="6" fill="#5B4FE9" />
             <rect x="27" y="17" width="26" height="3.2" rx="1.6" fill="#FFFFFF" />
             <rect x="27" y="24" width="18" height="3.2" rx="1.6" fill="#FFFFFF" fillOpacity="0.7" />
           </svg>
-          <span className="font-display font-bold text-lg tracking-tight hidden sm:inline">
+          <span className="font-display font-bold text-sm sm:text-lg tracking-tight whitespace-nowrap">
             Easy<span className="text-[var(--color-accent)]">Slides</span>Downloader
-          </span>
-          <span className="font-display font-bold text-lg tracking-tight sm:hidden">
-            Easy<span className="text-[var(--color-accent)]">Slides</span>
           </span>
         </a>
 

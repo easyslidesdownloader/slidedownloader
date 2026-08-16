@@ -80,17 +80,35 @@ export async function POST(req: NextRequest) {
      * We map your quality selector to the available sets.
      */
 
-    let qualityIndex = 0;
+    function selectQualitySet(
+  allSlides: { images: string[]; quality: string }[],
+  requestedQuality: string
+) {
+  const normalize = (q: string) => q.toLowerCase().replace(/[\s_-]/g, "");
+  const target = normalize(requestedQuality);
 
-    if (quality === "hd") {
-      qualityIndex = Math.min(1, data.all_slides.length - 1);
+  let match = allSlides.find((set) => normalize(set.quality) === target);
+
+  if (!match) {
+    console.warn(
+      `[fetch-slides] Requested quality "${requestedQuality}" not found. Available from SlideSaver: ${allSlides
+        .map((s) => s.quality)
+        .join(", ")}`
+    );
+    // Sensible fallback instead of a blind index guess
+    if (requestedQuality === "fullhd") {
+      match = allSlides[allSlides.length - 1]; // highest available
+    } else if (requestedQuality === "sd") {
+      match = allSlides[0]; // lowest available
+    } else {
+      match = allSlides[Math.floor(allSlides.length / 2)]; // middle-ish for hd
     }
+  }
 
-    if (quality === "fullhd") {
-      qualityIndex = data.all_slides.length - 1;
-    }
+  return match;
+}
 
-    const selectedSet = data.all_slides[qualityIndex];
+const selectedSet = selectQualitySet(data.all_slides, quality);
 
     if (!selectedSet || !selectedSet.images?.length) {
       return NextResponse.json(
