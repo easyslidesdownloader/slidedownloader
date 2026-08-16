@@ -145,7 +145,7 @@ export default function Home() {
       // they share the same request-dedup cache, so no duplicate
       // network calls happen either way). Store the PROMISE right
       // now, synchronously, so an early click can join it.
-      const pdfPromise = preparePDF(data.slides, (done, total) => {
+      const pdfPromise = preparePDF(data.slides, (done: number, total: number) => {
         // Only reflects on-screen if the user has since clicked
         // Download PDF (see handleExport) — harmless otherwise.
         if (presentationKeyRef.current === presentationKey) {
