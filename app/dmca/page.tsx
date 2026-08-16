@@ -41,6 +41,7 @@ export default function DMCAPage() {
   return (
     <>
       <Header />
+      <main>
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-4">
         <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight mb-3">
@@ -69,7 +70,7 @@ export default function DMCAPage() {
           </a>
         </div>
       </section>
-
+      </main>
       <Footer />
     </>
   );

@@ -5,7 +5,7 @@
   --color-canvas-dim: #EBEDF1;
   --color-card: #FFFFFF;
   --color-ink: #1C1E26;
-  --color-ink-muted: #6B7080;
+  --color-ink-muted: #5A5F72;
   --color-border: #E3E5EA;
   --color-accent: #5B4FE9;
   --color-accent-hover: #4C3FDB;
@@ -14,6 +14,10 @@
   --color-amber-soft: #FBF0DD;
   --color-danger: #D1453B;
   --color-danger-soft: #FBEAE9;
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 html, body {

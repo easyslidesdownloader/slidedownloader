@@ -58,7 +58,7 @@ export default function Header() {
         </nav>
 
         <a
-          href="#tool"
+          href="/#tool"
           className="hidden md:inline-flex items-center bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white text-sm font-medium px-4 py-2 rounded-lg transition"
         >
           Try It Free
@@ -97,7 +97,7 @@ export default function Header() {
               </a>
             ))}
             <a
-              href="#tool"
+              href="/#tool"
               onClick={() => setMenuOpen(false)}
               className="mt-2 inline-flex justify-center bg-[var(--color-accent)] text-white text-sm font-medium px-4 py-2.5 rounded-lg"
             >

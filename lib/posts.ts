@@ -4,12 +4,14 @@ export type Post = {
   excerpt: string;
   date: string;
   readTime: string;
+  image: string; // filename in public/images/, without extension
   content: string; // paragraphs separated by \n\n; lines starting with "## " are headings
 };
 
 export const posts: Post[] = [
   {
     slug: "how-to-download-slideshare-presentations",
+    image: "How to Download SlideShare Presentations (Complete Guide)",
     title: "How to Download SlideShare Presentations (Complete Guide)",
     excerpt: "A full step-by-step walkthrough for saving any public SlideShare presentation as PDF, PPTX, or images.",
     date: "2026-08-01",
@@ -62,6 +64,7 @@ If it still doesn't work, our Help Center has a full troubleshooting section, or
   },
   {
     slug: "how-to-download-slideshare-without-login",
+    image: "How to Download SlideShare Presentations Without Logging In",
     title: "How to Download SlideShare Presentations Without Logging In",
     excerpt: "SlideShare normally wants you to sign in with LinkedIn to save anything. Here's how to skip that entirely.",
     date: "2026-08-02",
@@ -91,6 +94,7 @@ That's actually a good thing: it means creators still have control over who sees
   },
   {
     slug: "is-it-legal-to-download-slideshare-presentations",
+    image: "Is It Legal to Download SlideShare Presentations",
     title: "Is It Legal to Download SlideShare Presentations?",
     excerpt: "A straightforward look at the legal side of saving presentations for personal use, study, or reference.",
     date: "2026-08-03",
@@ -123,6 +127,7 @@ If you've found your own presentation downloaded or used in a way you didn't aut
   },
   {
     slug: "slideshare-to-pdf-guide",
+    image: "How to Convert SlideShare to PDF",
     title: "How to Convert SlideShare to PDF",
     excerpt: "Turn any SlideShare presentation into a clean, shareable PDF in under a minute.",
     date: "2026-08-04",
@@ -156,6 +161,7 @@ Since each slide is placed as an image, the text inside the PDF isn't selectable
   },
   {
     slug: "slideshare-to-pptx-guide",
+    image: "How to Convert SlideShare to PPTX (PowerPoint)",
     title: "How to Convert SlideShare to PPTX (PowerPoint)",
     excerpt: "Get a SlideShare presentation into a real PowerPoint file you can open, present, and reorder offline.",
     date: "2026-08-05",
@@ -191,6 +197,7 @@ Choose PPTX if you plan to actually present the deck or want to reorder/reuse in
   },
   {
     slug: "slideshare-mobile-download-guide",
+    image: "How to Download SlideShare on Mobile (Android & iPhone)",
     title: "How to Download SlideShare on Mobile (Android & iPhone)",
     excerpt: "Yes, you can download SlideShare presentations right from your phone — here's how.",
     date: "2026-08-06",
@@ -225,6 +232,7 @@ Because everything runs directly in your mobile browser, there's no app to insta
   },
   {
     slug: "slideshare-download-not-working",
+    image: "SlideShare Not Letting You Download Here's Why (and How to Fix It)",
     title: "SlideShare Not Letting You Download? Here's Why (and How to Fix It)",
     excerpt: "The most common reasons a SlideShare download fails, and what to actually do about each one.",
     date: "2026-08-07",
@@ -262,6 +270,7 @@ If a presentation still won't download anywhere, it's almost always because it's
   },
   {
     slug: "how-to-save-slideshare-as-images",
+    image: "How to Save SlideShare Slides as Individual Images",
     title: "How to Save SlideShare Slides as Individual Images",
     excerpt: "Sometimes you just need the visuals — here's how to export every slide as its own image file.",
     date: "2026-08-08",
@@ -291,6 +300,7 @@ Once downloaded, just extract the ZIP like any other compressed folder. On Windo
   },
   {
     slug: "pdf-vs-pptx-vs-images-comparison",
+    image: "PDF vs PPTX vs Images Which Format Should You Choose",
     title: "PDF vs PPTX vs Images: Which Format Should You Choose?",
     excerpt: "A closer look at all three export formats, so you download the right one the first time.",
     date: "2026-08-09",
@@ -320,6 +330,7 @@ All three formats are generated instantly and download directly to your device �
   },
   {
     slug: "slideshare-downloader-for-students",
+    image: "SlideShare Downloader for Students Save Lecture Slides for Offline Study",
     title: "SlideShare Downloader for Students: Save Lecture Slides for Offline Study",
     excerpt: "Build your own offline study library from lecture decks, course material, and research presentations.",
     date: "2026-08-10",
@@ -350,6 +361,7 @@ Downloading lecture material for your own personal study is exactly the kind of 
   },
   {
     slug: "slideshare-for-teachers-classroom",
+    image: "How Teachers Can Use SlideShare Presentations in the Classroom",
     title: "How Teachers Can Use SlideShare Presentations in the Classroom",
     excerpt: "Building a reliable, offline-ready library of teaching material from public SlideShare content.",
     date: "2026-08-11",
@@ -380,6 +392,7 @@ Using downloaded material for teaching is a reasonable, common use case — but 
   },
   {
     slug: "reusing-slideshare-content-best-practices",
+    image: "Best Practices for Reusing SlideShare Content in Your Own Presentations",
     title: "Best Practices for Reusing SlideShare Content in Your Own Presentations",
     excerpt: "How to responsibly pull ideas, diagrams, and layouts from downloaded presentations into your own work.",
     date: "2026-08-12",
@@ -408,6 +421,7 @@ If you're planning to reuse a substantial amount of someone's original work — 
   },
   {
     slug: "best-slideshare-alternatives",
+    image: "Top SlideShare Alternatives for Hosting Your Own Presentations",
     title: "Top SlideShare Alternatives for Hosting Your Own Presentations",
     excerpt: "If you're looking to publish presentations yourself, here are the platforms worth considering.",
     date: "2026-08-13",
@@ -440,6 +454,7 @@ If your priority is reach and discoverability, a public platform like SlideShare
   },
   {
     slug: "best-free-slideshare-downloader-tools-compared",
+    image: "Best Free SlideShare Downloader Tools Compared (2026)",
     title: "Best Free SlideShare Downloader Tools Compared (2026)",
     excerpt: "What actually matters when picking a SlideShare downloader, and how to evaluate the options.",
     date: "2026-08-14",
@@ -479,6 +494,7 @@ EasySlidesDownloader was built specifically around these priorities — reliable
   },
   {
     slug: "slideshare-downloader-common-errors",
+    image: "SlideShare Downloader Not Working Common Errors Explained",
     title: "SlideShare Downloader Not Working? Common Errors Explained",
     excerpt: "A breakdown of the error messages you might see, and exactly what each one means.",
     date: "2026-08-15",
@@ -507,6 +523,7 @@ If none of the above resolves it, reach out through our Contact page with the Sl
   },
   {
     slug: "how-to-find-slideshare-url",
+    image: "How to Find and Copy a SlideShare Presentation URL",
     title: "How to Find and Copy a SlideShare Presentation URL",
     excerpt: "A quick reference for grabbing the exact link a downloader tool needs.",
     date: "2026-08-16",

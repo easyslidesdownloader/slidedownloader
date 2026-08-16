@@ -47,6 +47,7 @@ export default function AboutPage() {
   return (
     <>
       <Header />
+      <main>
 
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-16 text-center">
@@ -126,6 +127,7 @@ export default function AboutPage() {
       </section>
 
       <CTASection />
+      </main>
       <Footer />
     </>
   );

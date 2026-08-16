@@ -14,7 +14,7 @@ export default function CTASection() {
             Free, no login, no watermark — paste a link and get your slides in seconds.
           </p>
           <a
-            href="#tool"
+            href="/#tool"
             className="inline-flex items-center justify-center bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white font-medium px-7 py-3.5 rounded-xl transition"
           >
             Try It Free

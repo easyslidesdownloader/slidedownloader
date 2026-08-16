@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   exportToPDF,
   exportToPPTX,
@@ -55,6 +55,18 @@ export default function Home() {
   const [justDone, setJustDone] = useState("");
 
   const [progress, setProgress] = useState({ done: 0, total: 0 });
+
+  useEffect(() => {
+  function focusIfHash() {
+    if (window.location.hash === "#tool") {
+      const input = document.getElementById("url-input") as HTMLInputElement | null;
+      setTimeout(() => input?.focus(), 400); // let the scroll-to-anchor finish first
+    }
+  }
+  focusIfHash();
+  window.addEventListener("hashchange", focusIfHash);
+  return () => window.removeEventListener("hashchange", focusIfHash);
+}, []);
 
   /*
    * Stores the PDF being prepared in the background — as a PROMISE,
@@ -219,6 +231,7 @@ export default function Home() {
   return (
     <>
       <Header />
+      <main>
 
       <div id="tool" className="flex flex-col items-center px-4 pt-16 pb-4">
         <div className="w-full max-w-2xl">
@@ -239,6 +252,7 @@ export default function Home() {
             className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-6 shadow-[0_1px_2px_rgba(20,20,40,0.04),0_8px_24px_rgba(20,20,40,0.04)]"
           >
             <input
+              id="url-input"
               type="url"
               required
               placeholder="https://www.slideshare.net/slideshow/..."
@@ -353,6 +367,7 @@ export default function Home() {
       <FormatCompareSection />
       <ArticleContent />
       <FAQSection />
+      </main>
       <Footer />
     </>
   );

@@ -82,6 +82,7 @@ export default function HelpPage() {
   return (
     <>
       <Header />
+      <main>
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-12 text-center">
         <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight mb-4">
@@ -111,7 +112,7 @@ export default function HelpPage() {
                   <h3 className="font-medium mb-1">{s.title}</h3>
                   <p className="text-sm text-[var(--color-ink-muted)] leading-relaxed mb-2">{s.desc}</p>
                   {s.example && (
-                    <code className="text-xs bg-[var(--color-canvas-dim)] px-2.5 py-1.5 rounded-lg inline-block font-mono text-[var(--color-ink-muted)]">
+                    <code className="text-xs bg-[var(--color-canvas-dim)] px-2.5 py-1.5 rounded-lg inline-block max-w-full break-all font-mono text-[var(--color-ink-muted)]">
                       {s.example}
                     </code>
                   )}
@@ -211,6 +212,7 @@ export default function HelpPage() {
       </section>
 
       <CTASection />
+      </main>
       <Footer />
     </>
   );

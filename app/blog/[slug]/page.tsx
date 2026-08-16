@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
@@ -95,6 +96,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
+      <main>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-16">
         <a href="/blog" className="text-sm text-[var(--color-accent)] font-medium mb-6 inline-block">
@@ -105,13 +107,24 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {" · "}
           {post.readTime}
         </span>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mb-8 leading-tight">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mb-6 leading-tight">
           {post.title}
         </h1>
+        <div className="rounded-2xl overflow-hidden border border-[var(--color-border)] mb-8">
+          <Image
+            src={`/images/${encodeURIComponent(post.image)}.webp`}
+            alt={post.title}
+            width={1200}
+            height={675}
+            className="w-full h-auto"
+            priority
+          />
+        </div>
         <div>{renderContent(post.content)}</div>
       </article>
 
       <CTASection />
+      </main>
       <Footer />
     </>
   );

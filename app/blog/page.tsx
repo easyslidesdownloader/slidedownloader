@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { posts } from "@/lib/posts";
@@ -12,6 +13,7 @@ export default function BlogPage() {
   return (
     <>
       <Header />
+      <main>
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-12 text-center">
         <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight mb-4">
@@ -28,20 +30,31 @@ export default function BlogPage() {
             <a
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl p-6 hover:border-[var(--color-accent)]/40 transition flex flex-col"
+              className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-2xl overflow-hidden hover:border-[var(--color-accent)]/40 transition flex flex-col"
             >
-              <span className="font-mono text-xs text-[var(--color-ink-muted)] mb-3">
-                {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                {" · "}
-                {post.readTime}
-              </span>
-              <h2 className="font-display font-semibold text-lg mb-2 leading-snug">{post.title}</h2>
-              <p className="text-sm text-[var(--color-ink-muted)] leading-relaxed">{post.excerpt}</p>
+              <div className="aspect-video bg-[var(--color-canvas-dim)]">
+                <Image
+                  src={`/images/${encodeURIComponent(post.image)}.webp`}
+                  alt={post.title}
+                  width={600}
+                  height={338}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <span className="font-mono text-xs text-[var(--color-ink-muted)] mb-3 block">
+                  {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  {" · "}
+                  {post.readTime}
+                </span>
+                <h2 className="font-display font-semibold text-lg mb-2 leading-snug">{post.title}</h2>
+                <p className="text-sm text-[var(--color-ink-muted)] leading-relaxed">{post.excerpt}</p>
+              </div>
             </a>
           ))}
         </div>
       </section>
-
+      </main>
       <Footer />
     </>
   );
