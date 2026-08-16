@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { posts } from "@/lib/posts";
 
-const BASE_URL = "https://easyslidesdownloader.com";
+const BASE_URL = "https://www.easyslidesdownloader.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [

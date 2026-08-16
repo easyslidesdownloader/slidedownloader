@@ -20,7 +20,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://easyslidesdownloader.com"),
+  metadataBase: new URL("https://www.easyslidesdownloader.com"),
   title: {
     default: "SlideShare Downloader — Download PPT, PDF & Slides Instantly",
     template: "%s | EasySlidesDownloader",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SlideShare Downloader — Download PPT, PDF & Slides Instantly",
     description: "Download SlideShare presentations as PPTX, PDF, or images. No login, no watermark, free.",
-    url: "https://easyslidesdownloader.com",
+    url: "https://www.easyslidesdownloader.com",
     siteName: "EasySlidesDownloader",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     locale: "en_US",
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "EasySlidesDownloader",
-    url: "https://easyslidesdownloader.com",
+    url: "https://www.easyslidesdownloader.com",
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://easyslidesdownloader.com";
+const BASE_URL = "https://www.easyslidesdownloader.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {
