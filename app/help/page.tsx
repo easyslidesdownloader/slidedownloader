@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Help Center",
   description:
     "Guides, FAQs, and troubleshooting for downloading SlideShare presentations with EasySlidesDownloader.",
+    alternates: { canonical: "/help" },
 };
 
 const STEPS = [

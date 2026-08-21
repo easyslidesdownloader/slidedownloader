@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "How EasySlidesDownloader handles your data — no accounts, no stored files, no tracking cookies.",
+  alternates: { canonical: "/privacy" },
 };
 
 const SECTIONS = [

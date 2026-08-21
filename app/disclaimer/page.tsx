@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Disclaimer",
   description: "Disclaimer covering third-party content, intended use, and liability for EasySlidesDownloader.",
+  alternates: { canonical: "/disclaimer" },
 };
 
 const SECTIONS = [

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "Learn about EasySlidesDownloader — a free, private, and reliable tool for downloading SlideShare presentations as PDF, PPTX, or images.",
+     alternates: { canonical: "/about" },
 };
 
 const DIFFERENTIATORS = [

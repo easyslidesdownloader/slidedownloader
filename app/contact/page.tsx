@@ -6,6 +6,7 @@ import ContactForm from "@/components/ContactForm";
 export const metadata: Metadata = {
   title: "Contact Us",
   description: "Get in touch with EasySlidesDownloader — report a problem, ask a question, or reach out for anything else.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

@@ -7,6 +7,7 @@ import { posts } from "@/lib/posts";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Guides, tips, and answers for downloading and using SlideShare presentations.",
+  alternates: { canonical: "/blog" },
 };
 
 export default function BlogPage() {

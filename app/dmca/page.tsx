@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "DMCA Policy",
   description: "How to submit a DMCA takedown notice for content accessed through EasySlidesDownloader.",
+  alternates: { canonical: "/dmca" },
 };
 
 const SECTIONS = [

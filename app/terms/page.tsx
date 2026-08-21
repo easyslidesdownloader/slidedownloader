@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms of Service for using EasySlidesDownloader's free SlideShare presentation downloader.",
+  alternates: { canonical: "/terms" },
 };
 
 const SECTIONS = [
